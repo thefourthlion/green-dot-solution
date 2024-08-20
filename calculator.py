@@ -1,6 +1,3 @@
-Sure, here is a simple example of a text-based calculator application. Please note that there is no exception handling in this one. This script takes two numbers and an operator then performs the operation.
-
-```python
 def add(x, y):
    return x + y
 
@@ -44,8 +41,3 @@ while True:
        break
    else:
        print("Invalid Input")
-```
-
-Just copy and paste this code into a new Python file (like `calculator.py`), run it from your terminal, and follow the instructions it gives. It will ask you to enter an operation number (1 for addition, 2 for subtraction, 3 for multiplication, and 4 for division) and two numbers, and then it will print the result.
-
-Please remember that this a rudimentary example and a lot of improvements can be made including handling special cases, invalid input and incorporating a GUI.

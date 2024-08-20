@@ -12,20 +12,18 @@ api_key = os.getenv('OPEN_AI_KEY')
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
-# Function to generate code using OpenAI GPT
 def generate_code(prompt):
     try:
-        print(f"Sending prompt to OpenAI API: {prompt}")
+        # Modify the prompt to specify that only the code should be returned
+        full_prompt = f"Please generate the Python code only. No additional text or explanations. {prompt}"
+        print(f"Sending prompt to OpenAI API: {full_prompt}")
         completion = client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": full_prompt}
             ]
         )
-        # Log response object for debugging
         print("API response received.")
-
-        # Extract the generated code from the completion object
         code = completion.choices[0].message.content
         return code
     except Exception as e:
