@@ -12,6 +12,25 @@ api_key = os.getenv('OPEN_AI_KEY')
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
+def extract_code_from_response(response):
+    """
+    Extract the Python code from the AI's response.
+    Assumes the code is wrapped in triple backticks (```).
+    """
+    # Find the start and end of the code block
+    start = response.find("```")
+    if start != -1:
+        end = response.find("```", start + 3)
+        if end != -1:
+            # Extract and clean the code
+            code = response[start + 3:end].strip()
+            # Remove any language identifiers (like "python")
+            if code.startswith("python"):
+                code = code[len("python"):].strip()
+            return code
+    return response  # Return the full response if no code block is found
+
+
 def generate_code(prompt):
     try:
         # Modify the prompt to specify that only the code should be returned
@@ -24,7 +43,7 @@ def generate_code(prompt):
             ]
         )
         print("API response received.")
-        code = completion.choices[0].message.content
+        code = extract_code_from_response(completion.choices[0].message.content)
         return code
     except Exception as e:
         print(f"An error occurred during code generation: {e}")
