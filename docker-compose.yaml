@@ -2,10 +2,11 @@ version: '3.8'
 
 services:
   green-dots:
+    container_name: green-dots-solution
     build: .
     volumes:
       - .:/app
     environment:
       - OPEN_AI_KEY=${OPEN_AI_KEY}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
-    # restart: always
+    restart: always
