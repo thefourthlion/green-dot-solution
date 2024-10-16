@@ -17,23 +17,18 @@ def extract_code_from_response(response):
     Extract the Python code from the AI's response.
     Assumes the code is wrapped in triple backticks (```).
     """
-    # Find the start and end of the code block
     start = response.find("```")
     if start != -1:
         end = response.find("```", start + 3)
         if end != -1:
-            # Extract and clean the code
             code = response[start + 3:end].strip()
-            # Remove any language identifiers (like "python")
             if code.startswith("python"):
                 code = code[len("python"):].strip()
             return code
-    return response  # Return the full response if no code block is found
-
+    return response
 
 def generate_code(prompt):
     try:
-        # Modify the prompt to specify that only the code should be returned
         full_prompt = f"Please generate the Python code only. No additional text or explanations. {prompt}"
         print(f"Sending prompt to OpenAI API: {full_prompt}")
         completion = client.chat.completions.create(
@@ -49,47 +44,53 @@ def generate_code(prompt):
         print(f"An error occurred during code generation: {e}")
         return None
 
-# Function to write code to a file
 def write_code_to_file(filename, code):
     with open(filename, 'w') as file:
         file.write(code)
 
-# Function to upload to GitHub
 def upload_to_github(filename):
     subprocess.run(['git', 'add', '.'])
     subprocess.run(['git', 'commit', '-m', f'created {filename}'])
     subprocess.run(['git', 'push', '-u', 'origin', 'main'])
 
-# Load the project data from the JSON file
-with open('projects.json', 'r') as file:  # Ensure this path is correct
-    projects = json.load(file)
+# Main loop to run every 24 hours
+while True:
+    print("Starting a new cycle of project generation...")
 
-# Iterate over each project
-for project_name, prompt in list(projects.items()):
-    # Create the filename
-    filename = f"{project_name}.py"
+    # Load the project data from the JSON file
+    with open('projects.json', 'r') as file:
+        projects = json.load(file)
 
-    # Generate the code using OpenAI API
-    code = generate_code(prompt)
+    # Iterate over each project
+    for project_name, prompt in list(projects.items()):
+        # Create the filename
+        filename = f"{project_name}.py"
 
-    if code:
-        # Write the code to the file
-        write_code_to_file(filename, code)
+        # Generate the code using OpenAI API
+        code = generate_code(prompt)
 
-        # Upload the file to GitHub
-        upload_to_github(filename)
+        if code:
+            # Write the code to the file
+            write_code_to_file(filename, code)
 
-        # Print completion message
-        print(f"🟢 {project_name} Is Done")
+            # Upload the file to GitHub
+            upload_to_github(filename)
 
-        # Remove the completed project from the dictionary
-        del projects[project_name]
+            # Print completion message
+            print(f"🟢 {project_name} Is Done")
 
-        # Update the JSON file
-        with open('projects.json', 'w') as file:
-            json.dump(projects, file, indent=4)
-    else:
-        print(f"🔴 Failed to generate code for {project_name}")
+            # Remove the completed project from the dictionary
+            del projects[project_name]
 
-    # Wait 30 seconds before moving to the next project
-    time.sleep(30)
+            # Update the JSON file
+            with open('projects.json', 'w') as file:
+                json.dump(projects, file, indent=4)
+        else:
+            print(f"🔴 Failed to generate code for {project_name}")
+
+        # Wait 30 seconds before moving to the next project
+        time.sleep(30)
+
+    # After processing all projects, wait for 24 hours
+    print("Cycle completed. Waiting for 24 hours before the next cycle...")
+    time.sleep(24 * 60 * 60)  # 24 hours in seconds
