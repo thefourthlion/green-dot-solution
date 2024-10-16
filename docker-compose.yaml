@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  green-dots:
+  green-dots-solution:
     container_name: green-dots-solution
     build: .
     volumes:
