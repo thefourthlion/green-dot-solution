@@ -53,7 +53,13 @@ def upload_to_github(filename):
     subprocess.run(['git', 'commit', '-m', f'created {filename}'])
     subprocess.run(['git', 'push', '-u', 'origin', 'main'])
 
-# Main loop to run every 24 hours
+def countdown_timer(minutes):
+    for remaining in range(minutes, 0, -1):
+        print(f"🟡🟡🟡 Time remaining: {remaining} minutes", end='\r')
+        time.sleep(60)  # Wait for 1 minute
+    print("\nCountdown finished. Starting next project...")
+
+# Main loop
 while True:
     print("Starting a new cycle of project generation...")
 
@@ -61,39 +67,39 @@ while True:
     with open('projects.json', 'r') as file:
         all_projects = json.load(file)
 
-    # Create a copy of the projects to work on in this cycle
-    projects_to_process = all_projects.copy()
-
-    if not projects_to_process:
+    if not all_projects:
         print("No projects found in the JSON file. Waiting for 24 hours before checking again...")
-        time.sleep(24 * 60 * 60)  # 24 hours in seconds
+        countdown_timer(24 * 60)
         continue
 
-    # Iterate over each project
-    for project_name, prompt in list(projects_to_process.items()):
-        # Create the filename
-        filename = f"{project_name}.py"
-
-        # Generate the code using OpenAI API
-        code = generate_code(prompt)
-
-        if code:
-            # Write the code to the file
-            write_code_to_file(filename, code)
-
-            # Upload the file to GitHub
-            upload_to_github(filename)
-
-            # Print completion message
-            print(f"🟢 {project_name} Is Done")
-
-            # Remove the completed project from the dictionary
-            del projects_to_process[project_name]
-        else:
-            print(f"🔴 Failed to generate code for {project_name}")
-
-        # After processing all projects, wait for 24 hours
-        print("🟡🟡🟡Cycle completed. Waiting for 24 hours before the next cycle...")
-        time.sleep(24 * 60 * 60)  # 24 hours in seconds
-
+    # Process one project
+    project_name, prompt = next(iter(all_projects.items()))
     
+    # Create the filename
+    filename = f"{project_name}.py"
+
+    # Generate the code using OpenAI API
+    code = generate_code(prompt)
+
+    if code:
+        # Write the code to the file
+        write_code_to_file(filename, code)
+
+        # Upload the file to GitHub
+        upload_to_github(filename)
+
+        # Print completion message
+        print(f"🟢 {project_name} Is Done")
+
+        # Remove the completed project from the dictionary
+        del all_projects[project_name]
+
+        # Update the JSON file
+        with open('projects.json', 'w') as file:
+            json.dump(all_projects, file, indent=4)
+    else:
+        print(f"🔴 Failed to generate code for {project_name}")
+
+    # Wait for 24 hours before the next project
+    print("🟡Waiting for 24 hours before the next project...")
+    countdown_timer(24 * 60)
