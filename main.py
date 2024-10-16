@@ -61,6 +61,11 @@ while True:
     with open('projects.json', 'r') as file:
         projects = json.load(file)
 
+    if not projects:
+        print("No projects found in the JSON file. Waiting for 24 hours before checking again...")
+        time.sleep(24 * 60 * 60)  # 24 hours in seconds
+        continue
+
     # Iterate over each project
     for project_name, prompt in list(projects.items()):
         # Create the filename
