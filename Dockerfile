@@ -16,5 +16,8 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Mark /app as a safe directory for Git
+RUN git config --global --add safe.directory /app
+
 # Run main.py when the container launches
 CMD ["python", "main.py"]
