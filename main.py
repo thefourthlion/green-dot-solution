@@ -92,9 +92,8 @@ while True:
         else:
             print(f"🔴 Failed to generate code for {project_name}")
 
-        # Wait 30 seconds before moving to the next project
-        time.sleep(30)
+        # After processing all projects, wait for 24 hours
+        print("🟡🟡🟡Cycle completed. Waiting for 24 hours before the next cycle...")
+        time.sleep(24 * 60 * 60)  # 24 hours in seconds
 
-    # After processing all projects, wait for 24 hours
-    print("🟡🟡🟡Cycle completed. Waiting for 24 hours before the next cycle...")
-    time.sleep(24 * 60 * 60)  # 24 hours in seconds
+    
