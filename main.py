@@ -52,15 +52,14 @@ def write_code_to_file(filename, code):
         file.write(code)
 
 def upload_to_github(filename):
-    # Note: This function is modified to work within Docker
-    subprocess.run(['git', 'config', '--global', 'user.email', "you@example.com"])
+    github_token = os.getenv('GITHUB_TOKEN')
+    repo_url = f"https://{github_token}@github.com/thefourthlion/green-dots.git"
+    subprocess.run(['git', 'config', '--global', 'user.email', "your_email@example.com"])
     subprocess.run(['git', 'config', '--global', 'user.name', "Your Name"])
     subprocess.run(['git', 'init'])
     subprocess.run(['git', 'add', '.'])
     subprocess.run(['git', 'commit', '-m', f'created {filename}'])
-    print(f"Changes committed locally for {filename}")
-    # Uncomment the following line when you've set up Git credentials
-    # subprocess.run(['git', 'push', '-u', 'origin', 'main'])
+    subprocess.run(['git', 'push', '--force', repo_url, 'main'])
 
 def countdown_timer(minutes):
     for remaining in range(minutes, 0, -1):
