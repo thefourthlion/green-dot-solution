@@ -59,15 +59,18 @@ while True:
 
     # Load the project data from the JSON file
     with open('projects.json', 'r') as file:
-        projects = json.load(file)
+        all_projects = json.load(file)
 
-    if not projects:
+    # Create a copy of the projects to work on in this cycle
+    projects_to_process = all_projects.copy()
+
+    if not projects_to_process:
         print("No projects found in the JSON file. Waiting for 24 hours before checking again...")
         time.sleep(24 * 60 * 60)  # 24 hours in seconds
         continue
 
     # Iterate over each project
-    for project_name, prompt in list(projects.items()):
+    for project_name, prompt in list(projects_to_process.items()):
         # Create the filename
         filename = f"{project_name}.py"
 
@@ -85,11 +88,7 @@ while True:
             print(f"🟢 {project_name} Is Done")
 
             # Remove the completed project from the dictionary
-            del projects[project_name]
-
-            # Update the JSON file
-            with open('projects.json', 'w') as file:
-                json.dump(projects, file, indent=4)
+            del projects_to_process[project_name]
         else:
             print(f"🔴 Failed to generate code for {project_name}")
 
@@ -97,5 +96,5 @@ while True:
         time.sleep(30)
 
     # After processing all projects, wait for 24 hours
-    print("Cycle completed. Waiting for 24 hours before the next cycle...")
+    print("🟡🟡🟡Cycle completed. Waiting for 24 hours before the next cycle...")
     time.sleep(24 * 60 * 60)  # 24 hours in seconds
