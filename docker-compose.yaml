@@ -3,10 +3,8 @@ version: '3.8'
 services:
   green-dots:
     build: .
+    volumes:
+      - .:/app
     environment:
       - OPEN_AI_KEY=${OPEN_AI_KEY}
-    volumes:
-      - .:/green-dots
-    ports:
-      - "4440:4440"
     restart: always

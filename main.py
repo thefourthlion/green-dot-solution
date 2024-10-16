@@ -5,6 +5,9 @@ import subprocess
 from openai import OpenAI
 from dotenv import load_dotenv
 
+# Set the working directory to the script's location
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 # Load the API key from the .env file
 load_dotenv()
 api_key = os.getenv('OPEN_AI_KEY')
@@ -49,9 +52,15 @@ def write_code_to_file(filename, code):
         file.write(code)
 
 def upload_to_github(filename):
+    # Note: This function is modified to work within Docker
+    subprocess.run(['git', 'config', '--global', 'user.email', "you@example.com"])
+    subprocess.run(['git', 'config', '--global', 'user.name', "Your Name"])
+    subprocess.run(['git', 'init'])
     subprocess.run(['git', 'add', '.'])
     subprocess.run(['git', 'commit', '-m', f'created {filename}'])
-    subprocess.run(['git', 'push', '-u', 'origin', 'main'])
+    print(f"Changes committed locally for {filename}")
+    # Uncomment the following line when you've set up Git credentials
+    # subprocess.run(['git', 'push', '-u', 'origin', 'main'])
 
 def countdown_timer(minutes):
     for remaining in range(minutes, 0, -1):
