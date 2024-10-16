@@ -21,3 +21,5 @@ RUN git config --global --add safe.directory /app
 
 # Run main.py when the container launches
 CMD ["python", "main.py"]
+
+
