@@ -8,4 +8,4 @@ services:
     environment:
       - OPEN_AI_KEY=${OPEN_AI_KEY}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
-    restart: always
+    # restart: always
