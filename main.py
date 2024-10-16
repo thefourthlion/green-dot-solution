@@ -82,11 +82,13 @@ def upload_to_github(filename):
     run_git_command(['git', 'add', '.'])
     run_git_command(['git', 'commit', '-m', f'created {filename}'])
     
-    push_result = run_git_command(['git', 'push', '--force', repo_url, 'main'])
-    if push_result:
+    push_result = subprocess.run(['git', 'push', '--force', repo_url, 'main'], capture_output=True, text=True)
+    if push_result.returncode == 0:
         logging.info(f"Successfully pushed {filename} to GitHub")
+        logging.info(f"Push output: {push_result.stdout}")
     else:
         logging.error(f"Failed to push {filename} to GitHub")
+        logging.error(f"Push error: {push_result.stderr}")
 
 def countdown_timer(minutes):
     for remaining in range(minutes, 0, -1):
