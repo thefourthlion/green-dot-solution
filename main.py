@@ -55,7 +55,7 @@ def upload_to_github(filename):
 
 def countdown_timer(minutes):
     for remaining in range(minutes, 0, -1):
-        print(f"🟡🟡🟡 Time remaining: {remaining} minutes", end='\r')
+        print(f"⌛⌛⌛ Time remaining: {remaining} minutes", end='\r')
         time.sleep(60)  # Wait for 1 minute
     print("\nCountdown finished. Starting next project...")
 

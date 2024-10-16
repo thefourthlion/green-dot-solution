@@ -4,8 +4,9 @@ services:
   green-dots:
     build: .
     environment:
-      - OPEN_AI_KEY=${OPEN_AI_KEY} # Pass the OpenAI API key from the .env file
+      - OPEN_AI_KEY=${OPEN_AI_KEY}
     volumes:
       - .:/green-dots
     ports:
       - "4440:4440"
+    restart: always
