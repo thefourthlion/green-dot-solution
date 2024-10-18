@@ -1,6 +1,4 @@
 {
-    "mad-libs": "Generate a Python program that creates Mad Libs stories.",
-    "hangman-game": "Write a Hangman game in Python.",
     "calendar-app": "Build a basic calendar application using Python.",
     "tic-tac-toe-ai": "Develop a Tic-Tac-Toe game with AI in Python.",
     "chatbot": "Create a simple chatbot using Python.",
